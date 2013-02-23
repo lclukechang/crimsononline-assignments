@@ -14,8 +14,8 @@ def execFizzBuzz():
     else:
       print n
 
-#print "Let's playing FizzBuzz!"
-#execFizzBuzz()
+print "Let's playing FizzBuzz!"
+execFizzBuzz()
 
 
 
@@ -62,8 +62,8 @@ def swapchars(string):
       strlist.append(c)
   return ''.join(strlist)
         
-#input = raw_input('swapchars(case-insensitive!) - Enter a string: ')
-#swapchars(input)
+input = raw_input('swapchars(case-insensitive!) - Enter a string: ')
+swapchars(input)
 
 
 #3(v2). swapchars_sen - counts letters with regards to case: e.g T and t are
@@ -93,19 +93,24 @@ def swapchars_sen(string):
       strlist.append(c)
   return ''.join(strlist)
 
-#input = raw_input('swapchars_sen! - Enter a string: ')
-#swapchars_sen(input)
+input = raw_input('swapchars_sen! - Enter a string: ')
+swapchars_sen(input)
 
 
 
 #4. sortcat
 
 def sortcat( n, *strings ):
+  for s in strings:
+    if isinstance(s, basestring) != true:
+      print("Usage: sortcat(int, string1, string2, ...)")
+      return
   if n == -1:
     return ''.join(sorted(strings, key = len, reverse = True))
   else:
     return ''.join(sorted(strings, key = len)[:-n-1:-1])
 
+sortcat(-1, 'crimson', 'tech', 'milk', 'cheese', 'derp')
 
 
 #5b. Luigi wins
@@ -129,11 +134,32 @@ def luigi_simu(n):
   return wins/n
 
 print(luigi_simu(1000))
-      
 
 
+#8a. Shuttleboy!
 
+#import neccesary modules
+import urllib
+import json
+import datetime
+
+def get_Trips (origin, destination, n):
+  #construct URL
+  baseURL = "http://shuttleboy.cs50.net/api/1.2/trips?a={}&b={}&output=json"
+  URL = baseURL.format(urllib.quote(origin), urllib.quote(destination))
   
+  #get and parse JSON
+  response = urllib.urlopen(URL)
+  trips = json.load(response)
 
+  print "The next {} trips will depart {} for {}: ".format(n, origin, destination)
+  #filter through trips to get appropriate # of trips
+  for trip in trips[:n]:
+    trip['departs'] = datetime.datetime.strptime(trip['departs'], '%Y-%m-%dT%H:%M:%S')
+    trip['time_rem'] = (trip['departs'] - datetime.datetime.now()).total_seconds()
+    print "{} hours from now at time {}".format((trip['time_rem']/3600.), trip['departs']) 
+
+
+get_Trips('Quad', 'Mass Ave Garden St', 3)
 
 print("I love the Crimson tech department!")
