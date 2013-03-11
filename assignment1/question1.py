@@ -1,35 +1,36 @@
 
+from re import findall
+from collections import Counter
+
 def common_words(filename):
-    """question 1a
+  words = findall(r"\b[A-z]+\b",(open(filename).read().lower()))
+  freqs = Counter(words)
+  return freqs.keys()
+  
 
-    Write a function that takes a path to a text file as input. The function
-    should open the file, count the number of occurrences of each word, and
-    return a sorted list of the most common words.
-    """
-    pass
 
+from re import compile
 def common_words_min(filename, min_chars):
-    """question 1b
-
-    Modify this function to take a second argument that specifies the
-    minimum number of characters long a word can be to be counted.
-    """
-    pass
+  regex = compile(r"\b[A-z]{%d,}\b"%min_chars)
+  words = regex.findall(open(filename).read())
+  words = [str.lower() for str in words]
+  freqs = Counter(words)
+  return freqs.keys()
 
 def common_words_tuple(filename, min_chars):
-    """question 1c
-
-    Modify this function to return a list of tuples rather than just a list
-    of strings. Each tuple should be of the format
-        (word, number of occurrences)
-    Of course, the list of tuples should still be sorted as in part a.
-    """
-    pass
+  regex = compile(r"\b[A-z]{%d,}\b"%min_chars)
+  words = regex.findall(open(filename).read().lower())
+  freqs = Counter(words)
+  return freqs.viewitems()
 
 def common_words_safe(filename, min_chars):
-    """question 1d
+  try:
+    regex = compile(r"\b[A-z]{%d,}\b"%min_chars)
+    f = open(filename)
+    words = regex.findall(f.read().lower())
+    freqs = Counter(words)
+    return freqs.viewitems()
+ 
+  except IOError:
+    print "Error opening the file \"{}\".".format(filename)
 
-    Modify your function so that it catches the IOError exception and prints
-    a friendly error message.
-    """
-    pass

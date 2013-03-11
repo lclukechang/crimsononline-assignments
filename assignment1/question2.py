@@ -1,27 +1,37 @@
+
+#assumes tags are wellformed, and all anchor tags are labelled with some
+#label
+
+import re
 def parse_links_regex(filename):
-    """question 2a
+  try:
+    f = open(filename, 'r')
+    html = f.read()
+    labels = re.findall(r"(?i)<a.+>(.+)</a>",html)
+    f.seek(0)
+    html = f.read()
+    links = re.findall(r"(?i)<a href *= *\"(.+)\">",html)
+    return dict(zip(labels,links))
+  except IOError:
+    print "Could not open file \"{}\".".format(filename)
 
-    Using the re module, write a function that takes a path to an HTML file
-    (assuming the HTML is well-formed) as input and returns a dictionary
-    whose keys are the text of the links in the file and whose values are
-    the URLs to which those links correspond. Be careful about how you handle
-    the case in which the same text is used to link to different urls.
-    
-    For example:
-
-        You can get file 1 <a href="1.file">here</a>.
-        You can get file 2 <a href="2.file">here</a>.
-
-    What does it make the most sense to do here? 
-    """
-    pass
-
+from lxml import etree
 def parse_links_xpath(filename):
-    """question 2b
+  try:
+    parser = etree.HTMLParser()
+    tree = etree.parse(filename, parser)
+    links = tree.findall('//a[@href]')
+    lst = dict()
+    for link in links:
+      lst[link.text] = link.attrib['href']
+    return lst
+  except IOError:
+    print "Could not open file \"{}\".".format(filename)
 
-    Do the same using xpath and the lxml library from http://lxml.de rather
-    than regular expressions.
-    
-    Which approach is better? (Hint: http://goo.gl/mzl9t)
-    """
-    pass
+##
+ #
+ # Xpath/lxml is much better than Regex. lxml actually parses and processes
+ # the html into a object tree that is much less error prone to searches 
+ # than an arbitrary regular expression match.
+ #
+ ##
