@@ -18,10 +18,13 @@ def parse_links_regex(filename):
 from lxml import etree
 def parse_links_xpath(filename):
   try:
+    #init HTML parser
     parser = etree.HTMLParser()
     tree = etree.parse(filename, parser)
+    #retrieve all elements that at anchors with href sources
     links = tree.findall('//a[@href]')
     lst = dict()
+    #strip and return dictionary
     for link in links:
       lst[link.text] = link.attrib['href']
     return lst

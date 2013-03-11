@@ -8,7 +8,7 @@ def common_words(filename):
   return freqs.keys()
   
 
-
+# could also use lambdas and map/filter here instead of copy/pasting
 from re import compile
 def common_words_min(filename, min_chars):
   regex = compile(r"\b[A-z]{%d,}\b"%min_chars)
